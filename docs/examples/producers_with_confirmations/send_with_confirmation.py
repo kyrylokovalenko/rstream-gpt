@@ -36,9 +36,7 @@ async def publish():
             )
             # send is asynchronous - also confirmation is taken asynchronously by _on_publish_confirm_client callback
             # you can specify different callbacks for different messages.
-            await producer.send(
-                stream=STREAM, message=amqp_message, on_publish_confirm=_on_publish_confirm_client
-            )
+            await producer.send(stream=STREAM, message=amqp_message, on_publish_confirm=_on_publish_confirm_client)
 
             if (i % 10000) == 0:
                 print(f"Sent {i} messages in {time.perf_counter() - start_time:0.4f} seconds")

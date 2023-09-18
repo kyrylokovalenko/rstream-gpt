@@ -37,7 +37,6 @@ class DefaultSuperstreamMetadata(Metadata):
         self._routes: list[str] = []
 
     async def partitions(self) -> list[str]:
-
         if len(self._partitions) == 0:
             self._partitions = await self.client.partitions(self.super_stream)
             if len(self._partitions) <= 0:
@@ -72,7 +71,6 @@ class HashRoutingMurmurStrategy(RoutingStrategy):
         self.routingKeyExtractor: CB[Any] = routingKeyExtractor
 
     async def route(self, message: MessageT, metadata: Metadata) -> list[str]:
-
         streams = []
         key = await self.routingKeyExtractor(message)
         key_bytes = bytes(key, "UTF-16")

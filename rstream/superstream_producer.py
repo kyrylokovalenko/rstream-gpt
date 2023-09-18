@@ -51,7 +51,7 @@ class SuperStreamProducer:
         load_balancer_mode: bool = False,
         max_retries: int = 20,
         default_batch_publishing_delay: float = 0.2,
-        connection_closed_handler: Optional[CB[Exception]] = None
+        connection_closed_handler: Optional[CB[Exception]] = None,
     ):
         self._pool = ClientPool(
             host,
@@ -107,7 +107,6 @@ class SuperStreamProducer:
         message: MessageT,
         on_publish_confirm: Optional[CB[ConfirmationStatus]] = None,
     ) -> None:
-
         streams = await self._routing_strategy.route(message, self.super_stream_metadata)
         self._producer = await self._get_producer()
 

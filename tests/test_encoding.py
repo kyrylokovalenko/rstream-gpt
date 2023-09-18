@@ -31,9 +31,7 @@ frames = [
         brokers=[schema.Broker(reference=0, host="localhost", port=5552)],
         metadata=[schema.StreamMetadata(name="mystream", response_code=1, leader_ref=0, replicas_refs=[])],
     ),
-    schema.DeclarePublisher(
-        correlation_id=7, publisher_id=1, reference="mystream_publisher_1", stream="mystream"
-    ),
+    schema.DeclarePublisher(correlation_id=7, publisher_id=1, reference="mystream_publisher_1", stream="mystream"),
     schema.DeclarePublisherResponse(correlation_id=7, response_code=1),
     schema.QueryPublisherSequence(correlation_id=8, publisher_ref="mystream_publisher_1", stream="mystream"),
     schema.QueryPublisherSequenceResponse(correlation_id=8, response_code=1, sequence=293),

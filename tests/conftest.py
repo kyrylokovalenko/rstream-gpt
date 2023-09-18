@@ -137,17 +137,11 @@ async def super_stream(client: Client):
     await client.create_stream(super_stream + "-2")
 
     # create binding with exchange
-    status_code = create_binding(
-        exchange_name=super_stream, routing_key="key1", stream_name=super_stream + "-0"
-    )
+    status_code = create_binding(exchange_name=super_stream, routing_key="key1", stream_name=super_stream + "-0")
     assert status_code == 201 or status_code == 204
-    status_code = create_binding(
-        exchange_name=super_stream, routing_key="key2", stream_name=super_stream + "-1"
-    )
+    status_code = create_binding(exchange_name=super_stream, routing_key="key2", stream_name=super_stream + "-1")
     assert status_code == 201 or status_code == 204
-    status_code = create_binding(
-        exchange_name=super_stream, routing_key="key3", stream_name=super_stream + "-2"
-    )
+    status_code = create_binding(exchange_name=super_stream, routing_key="key3", stream_name=super_stream + "-2")
     assert status_code == 201 or status_code == 204
 
     try:
@@ -246,7 +240,6 @@ async def super_stream_consumer(pytestconfig, ssl_context):
 
 @pytest.fixture()
 async def super_stream_consumer_for_sac1(pytestconfig, ssl_context):
-
     consumer = SuperStreamConsumer(
         host=pytestconfig.getoption("rmq_host"),
         port=pytestconfig.getoption("rmq_port"),
@@ -285,7 +278,6 @@ async def super_stream_consumer_for_sac2(pytestconfig, ssl_context):
 
 @pytest.fixture()
 async def super_stream_consumer_for_sac3(pytestconfig, ssl_context):
-
     consumer = SuperStreamConsumer(
         host=pytestconfig.getoption("rmq_host"),
         port=pytestconfig.getoption("rmq_port"),
@@ -305,7 +297,6 @@ async def super_stream_consumer_for_sac3(pytestconfig, ssl_context):
 
 @pytest.fixture()
 async def super_stream_consumer_for_sac4(pytestconfig, ssl_context):
-
     consumer = SuperStreamConsumer(
         host=pytestconfig.getoption("rmq_host"),
         port=pytestconfig.getoption("rmq_port"),

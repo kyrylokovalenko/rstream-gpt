@@ -29,9 +29,7 @@ async def consume():
     loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(consumer.close()))
     offset_specification = ConsumerOffsetSpecification(OffsetType.FIRST, None)
     await consumer.start()
-    await consumer.subscribe(
-        callback=on_message, decoder=amqp_decoder, offset_specification=offset_specification
-    )
+    await consumer.subscribe(callback=on_message, decoder=amqp_decoder, offset_specification=offset_specification)
     await consumer.run()
 
 

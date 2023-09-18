@@ -38,9 +38,7 @@ async def publish():
                 print(f"Published {i} messages to super stream: {SUPER_STREAM}")
 
         end_time = time.perf_counter()
-        print(
-            f"Sent {MESSAGES} messages in {end_time - start_time:0.4f} seconds to super stream: {SUPER_STREAM}"
-        )
+        print(f"Sent {MESSAGES} messages in {end_time - start_time:0.4f} seconds to super stream: {SUPER_STREAM}")
 
 
 asyncio.run(publish())

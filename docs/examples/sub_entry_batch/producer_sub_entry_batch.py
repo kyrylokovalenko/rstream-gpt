@@ -24,14 +24,10 @@ async def publish():
                 messages.append(amqp_message)
 
             # sending with compression
-            await producer.send_sub_entry(
-                STREAM, compression_type=CompressionType.Gzip, sub_entry_messages=messages
-            )
+            await producer.send_sub_entry(STREAM, compression_type=CompressionType.Gzip, sub_entry_messages=messages)
 
             # sending without compression
-            await producer.send_sub_entry(
-                STREAM, compression_type=CompressionType.No, sub_entry_messages=messages
-            )
+            await producer.send_sub_entry(STREAM, compression_type=CompressionType.No, sub_entry_messages=messages)
         end_time = time.perf_counter()
         print(
             f"Sent {LOOP * BATCH * 2} messages in {end_time - start_time:0.4f} seconds {LOOP * BATCH} "

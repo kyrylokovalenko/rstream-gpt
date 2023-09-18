@@ -124,7 +124,6 @@ class Producer:
     async def close(self) -> None:
         # flush messages still in buffer
         if self.task is not None:
-
             for stream in self._buffered_messages:
                 await self._publish_buffered_messages(stream)
             self.task.cancel()
@@ -204,12 +203,9 @@ class Producer:
         publisher_name: Optional[str] = None,
         on_publish_confirm: Optional[CB[ConfirmationStatus]] = None,
     ) -> list[int]:
-
         wrapped_batch = []
         for item in batch:
-            wrapped_item = _MessageNotification(
-                entry=item, callback=on_publish_confirm, publisher_name=publisher_name
-            )
+            wrapped_item = _MessageNotification(entry=item, callback=on_publish_confirm, publisher_name=publisher_name)
             wrapped_batch.append(wrapped_item)
 
         return await self._send_batch(stream, wrapped_batch, sync=False)
@@ -228,12 +224,10 @@ class Producer:
         publishing_ids_callback: dict[CB[ConfirmationStatus], set[int]] = defaultdict(set)
 
         for item in batch:
-
             async with self._lock:
                 publisher = await self._get_or_create_publisher(stream, publisher_name=item.publisher_name)
 
             if not isinstance(item.entry, ICompressionCodec):
-
                 msg = RawMessage(item.entry) if isinstance(item.entry, bytes) else item.entry
 
                 if msg.publishing_id is None:
@@ -281,7 +275,6 @@ class Producer:
                     publishing_ids_callback[item.callback].add(publishing_id)
 
         if len(messages) > 0:
-
             await publisher.client.send_frame(
                 schema.Publish(
                     publisher_id=publisher.id,
@@ -291,7 +284,6 @@ class Producer:
             publishing_ids.update([m.publishing_id for m in messages])
 
         for callback in publishing_ids_callback:
-
             if callback not in self._waiting_for_confirm[publisher.reference]:
                 self._waiting_for_confirm[publisher.reference][callback] = set()
 
@@ -310,7 +302,6 @@ class Producer:
         message: MessageT,
         publisher_name: Optional[str] = None,
     ) -> int:
-
         wrapped_message: _MessageNotification = _MessageNotification(
             entry=message, callback=None, publisher_name=publisher_name
         )
@@ -323,7 +314,6 @@ class Producer:
         return publishing_ids[0]
 
     def _timer_completed(self, context):
-
         if not context.cancelled():
             if context.exception():
                 raise context.exception()
@@ -337,7 +327,6 @@ class Producer:
         publisher_name: Optional[str] = None,
         on_publish_confirm: Optional[CB[ConfirmationStatus]] = None,
     ):
-
         # start the background thread to send buffered messages
         if self.task is None:
             self.task = asyncio.create_task(self._timer())
@@ -363,7 +352,6 @@ class Producer:
         publisher_name: Optional[str] = None,
         on_publish_confirm: Optional[CB[ConfirmationStatus]] = None,
     ):
-
         if len(sub_entry_messages) == 0:
             raise ValueError("Empty batch")
 
@@ -384,21 +372,18 @@ class Producer:
 
     # After the timeout send the messages in _buffered_messages in batches
     async def _timer(self):
-
         while True:
             await asyncio.sleep(self._default_batch_publishing_delay)
             for stream in self._buffered_messages:
                 await self._publish_buffered_messages(stream)
 
     async def _publish_buffered_messages(self, stream: str) -> None:
-
         async with self._buffered_messages_lock:
             if len(self._buffered_messages[stream]):
                 await self._send_batch(stream, self._buffered_messages[stream], sync=False)
                 self._buffered_messages[stream].clear()
 
     def _on_publish_confirm(self, frame: schema.PublishConfirm, publisher: _Publisher) -> None:
-
         if frame.publisher_id != publisher.id:
             return
 
@@ -418,7 +403,6 @@ class Producer:
                     confirmation.set_result(None)
 
     def _on_publish_error(self, frame: schema.PublishError, publisher: _Publisher) -> None:
-
         if frame.publisher_id != publisher.id:
             return
 
@@ -429,9 +413,7 @@ class Producer:
                 ids = waiting[confirmation]
                 if error.publishing_id in ids:
                     if not isinstance(confirmation, asyncio.Future):
-                        confirmation_status = ConfirmationStatus(
-                            error.publishing_id, False, error.response_code
-                        )
+                        confirmation_status = ConfirmationStatus(error.publishing_id, False, error.response_code)
                         confirmation(confirmation_status)
                         ids.remove(error.publishing_id)
 
@@ -446,7 +428,6 @@ class Producer:
         arguments: Optional[dict[str, Any]] = None,
         exists_ok: bool = False,
     ) -> None:
-
         try:
             await self.default_client.create_stream(stream, arguments)
         except exceptions.StreamAlreadyExists:

@@ -85,9 +85,7 @@ class BaseClient:
         }
 
         self._corr_id_seq = utils.MonotonicSeq()
-        self._waiters: dict[
-            tuple[constants.Key, Optional[int]], set[asyncio.Future[schema.Frame]]
-        ] = defaultdict(set)
+        self._waiters: dict[tuple[constants.Key, Optional[int]], set[asyncio.Future[schema.Frame]]] = defaultdict(set)
 
         self._tasks: dict[str, asyncio.Task[None]] = {}
         self._handlers: dict[Type[schema.Frame], dict[str, HT[Any]]] = defaultdict(dict)
@@ -495,7 +493,6 @@ class Client(BaseClient):
         return resp.streams
 
     async def consumer_update(self, correlation_id: int, offset_specification: OffsetSpecification) -> None:
-
         await self.send_frame(
             schema.ConsumerUpdateServerResponse(
                 correlation_id=correlation_id,
@@ -559,9 +556,7 @@ class ClientPool:
 
         if desired_addr not in self._clients:
             if addr and self.load_balancer_mode:
-                self._clients[desired_addr] = await self._resolve_broker(
-                    desired_addr, connection_closed_handler
-                )
+                self._clients[desired_addr] = await self._resolve_broker(desired_addr, connection_closed_handler)
             else:
                 self._clients[desired_addr] = await self.new(
                     addr=desired_addr, connection_closed_handler=connection_closed_handler
@@ -570,9 +565,7 @@ class ClientPool:
         assert self._clients[desired_addr].is_started
         return self._clients[desired_addr]
 
-    async def _resolve_broker(
-        self, addr: Addr, connection_closed_handler: Optional[CB[Exception]] = None
-    ) -> Client:
+    async def _resolve_broker(self, addr: Addr, connection_closed_handler: Optional[CB[Exception]] = None) -> Client:
         desired_host, desired_port = addr.host, str(addr.port)
 
         connection_attempts = 0

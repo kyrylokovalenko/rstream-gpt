@@ -38,9 +38,7 @@ async def publish():
                 )
                 messages.append(amqp_message)
             # send_batch is synchronous. will wait till termination
-            await producer.send_batch(
-                stream=STREAM, batch=messages, on_publish_confirm=_on_publish_confirm_client
-            )
+            await producer.send_batch(stream=STREAM, batch=messages, on_publish_confirm=_on_publish_confirm_client)
 
             if (j % 1000) == 0:
                 print(f"Sent {j * BATCH} messages in {time.perf_counter() - start_time:0.4f} seconds")

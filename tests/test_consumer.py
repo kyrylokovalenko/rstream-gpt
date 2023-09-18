@@ -52,9 +52,7 @@ async def test_delete_stream_doesnt_exist(consumer: Consumer) -> None:
 
 async def test_consume(stream: str, consumer: Consumer, producer: Producer) -> None:
     captured: list[bytes] = []
-    await consumer.subscribe(
-        stream, callback=lambda message, message_context: captured.append(bytes(message))
-    )
+    await consumer.subscribe(stream, callback=lambda message, message_context: captured.append(bytes(message)))
     assert await producer.send_wait(stream, b"one") == 1
     assert await producer.send_batch(stream, [b"two", b"three"]) == [2, 3]
 
@@ -126,7 +124,6 @@ async def test_offset_manual_setting(stream: str, consumer: Consumer, producer: 
 
 
 async def test_consumer_callback(stream: str, consumer: Consumer, producer: Producer) -> None:
-
     streams: list[str] = []
     offsets: list[int] = []
 
@@ -209,9 +206,7 @@ async def test_consume_superstream_with_resubscribe(
     super_stream: str, super_stream_consumer: SuperStreamConsumer, super_stream_producer: SuperStreamProducer
 ) -> None:
     captured: list[bytes] = []
-    await super_stream_consumer.subscribe(
-        callback=lambda message, message_context: captured.append(bytes(message))
-    )
+    await super_stream_consumer.subscribe(callback=lambda message, message_context: captured.append(bytes(message)))
     await super_stream_producer.send(b"one")
     await wait_for(lambda: len(captured) >= 1)
 
@@ -228,9 +223,7 @@ async def test_consume_superstream_with_resubscribe(
 
 async def test_consume_with_restart(stream: str, consumer: Consumer, producer: Producer) -> None:
     captured: list[bytes] = []
-    await consumer.subscribe(
-        stream, callback=lambda message, message_context: captured.append(bytes(message))
-    )
+    await consumer.subscribe(stream, callback=lambda message, message_context: captured.append(bytes(message)))
     await producer.send_wait(stream, b"one")
     await wait_for(lambda: len(captured) >= 1)
 
@@ -255,9 +248,7 @@ async def test_consume_multiple_streams(consumer: Consumer, producer: Producer) 
         captured: list[bytes] = []
         await asyncio.gather(
             *(
-                consumer.subscribe(
-                    stream, callback=lambda message, message_context: captured.append(bytes(message))
-                )
+                consumer.subscribe(stream, callback=lambda message, message_context: captured.append(bytes(message)))
                 for stream in streams
             )
         )
@@ -279,7 +270,6 @@ async def test_consume_superstream_with_sac_all_active(
     super_stream_consumer_for_sac3: SuperStreamConsumer,
     super_stream_producer_for_sac: SuperStreamProducer,
 ) -> None:
-
     consumer_stream_list1: list[str] = []
     consumer_stream_list2: list[str] = []
     consumer_stream_list3: list[str] = []
@@ -323,7 +313,6 @@ async def test_consume_superstream_with_sac_one_non_active(
     super_stream_consumer_for_sac4: SuperStreamConsumer,
     super_stream_producer_for_sac: SuperStreamProducer,
 ) -> None:
-
     consumer_stream_list1: list[str] = []
     consumer_stream_list2: list[str] = []
     consumer_stream_list3: list[str] = []
@@ -373,7 +362,6 @@ async def test_consume_superstream_with_callback_next(
     super_stream_consumer_for_sac3: SuperStreamConsumer,
     super_stream_producer_for_sac: SuperStreamProducer,
 ) -> None:
-
     consumer_stream_list1: list[str] = []
     consumer_stream_list2: list[str] = []
     consumer_stream_list3: list[str] = []
@@ -416,7 +404,6 @@ async def test_consume_superstream_with_callback_first(
     super_stream_consumer_for_sac3: SuperStreamConsumer,
     super_stream_producer_for_sac: SuperStreamProducer,
 ) -> None:
-
     consumer_stream_list1: list[str] = []
     consumer_stream_list2: list[str] = []
     consumer_stream_list3: list[str] = []
@@ -459,7 +446,6 @@ async def test_consume_superstream_with_callback_offset(
     super_stream_consumer_for_sac3: SuperStreamConsumer,
     super_stream_producer_for_sac: SuperStreamProducer,
 ) -> None:
-
     consumer_stream_list1: list[str] = []
     consumer_stream_list2: list[str] = []
     consumer_stream_list3: list[str] = []

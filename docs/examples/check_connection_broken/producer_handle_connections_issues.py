@@ -12,7 +12,6 @@ def on_connection_closed(reason: Exception) -> None:
 
 
 async def publish():
-
     async with Producer(
         "localhost", username="guest", password="guest", connection_closed_handler=on_connection_closed
     ) as producer:

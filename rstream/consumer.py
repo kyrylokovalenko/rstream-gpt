@@ -178,7 +178,6 @@ class Consumer:
         subscriber_name: Optional[str] = None,
         consumer_update_listener: Optional[Callable[[bool, EventContext], Awaitable[Any]]] = None,
     ) -> str:
-
         if offset_specification is None:
             offset_specification = ConsumerOffsetSpecification(OffsetType.FIRST, None)
 
@@ -215,9 +214,7 @@ class Consumer:
         await subscriber.client.subscribe(
             stream=stream,
             subscription_id=subscriber.subscription_id,
-            offset_spec=schema.OffsetSpec.from_params(
-                offset_specification.offset_type, offset_specification.offset
-            ),
+            offset_spec=schema.OffsetSpec.from_params(offset_specification.offset_type, offset_specification.offset),
             initial_credit=initial_credit,
             properties=properties,
         )
@@ -267,13 +264,12 @@ class Consumer:
         subscriber.offset = frame.chunk_first_offset + frame.num_entries
 
     async def _on_deliver(self, frame: schema.Deliver, subscriber: _Subscriber) -> None:
-
         if frame.subscription_id != subscriber.subscription_id:
             return
 
         await subscriber.client.credit(subscriber.subscription_id, 1)
 
-        for (offset, message) in self._filter_messages(frame, subscriber):
+        for offset, message in self._filter_messages(frame, subscriber):
             message_context = MessageContext(self, subscriber.reference, offset, frame.timestamp)
 
             maybe_coro = subscriber.callback(subscriber.decoder(message), message_context)
@@ -287,7 +283,6 @@ class Consumer:
         reference: str,
         consumer_update_listener: Optional[Callable[[bool, EventContext], Awaitable[Any]]] = None,
     ) -> None:
-
         # event the consumer is not active, we need to send a ConsumerUpdateResponse
         # by protocol definition. the offsetType can't be null so we use OffsetTypeNext as default
         if consumer_update_listener is None:
@@ -327,9 +322,7 @@ class Consumer:
         return await self.default_client.stream_exists(stream)
 
     async def stream(self, subscriber_name) -> str:
-
         return self._subscribers[subscriber_name].stream
 
     def get_stream(self, subscriber_name) -> str:
-
         return self._subscribers[subscriber_name].stream
