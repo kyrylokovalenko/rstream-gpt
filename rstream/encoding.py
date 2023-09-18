@@ -176,7 +176,7 @@ def _decode_struct(buf: io.BytesIO, tp: Type[Struct]) -> Struct:
 
         data[fld_name] = _decode_field(buf, fld_tp)
 
-    return tp(**data)  # type:ignore[call-arg]
+    return tp(**data)
 
 
 def decode_frame(data: bytes) -> Frame:
